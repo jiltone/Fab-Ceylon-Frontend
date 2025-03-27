@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import cart_icon from "../components/Assets/cart_icon.png"
-import user_icon from "../components/Assets/user_icon.png"
-import Fabceylon_logo from '../components/Assets/fab_grand.png'
-import Fabceylon_Grand_logo from "../components/Assets/fab_grand.png";
+import cart_icon from "../components/Assets/cart_icon.png";
+import user_icon from "../components/Assets/user_icon.png";
+import Fabceylon_logo from '../components/Assets/fab_grand.png';
 
 export const GrandMainMenuNavBar = () => {
-  const [activeItem, setActiveItem] = useState(''); // Tracks the active menu item
+  const [activeItem, setActiveItem] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
     { label: 'HOME', link: '/' },
@@ -19,57 +19,107 @@ export const GrandMainMenuNavBar = () => {
   ];
 
   return (
-    <div className="relative">
-      <div className="flex items-center h-[150px] ml-[20px] justify-between sm:px-0 md:px-5 lg:px-10">
-        <div className=' flex flex-row gap-5 items-center'>
-        <Image
-          className="w-[55px] h-[40px] ml-10"
-          src={Fabceylon_logo}
-          alt="Fab Ceylon Logo"
-          width={52}
-          height={52}
-        />
-        <div className="w-[323px] text-[#eb650f] text-[40px] font-extrabold font-serif ml-10">
-          FAB CEYLON Grand
-        </div>
-        </div>
-
-        <div className="flex items-center gap-8 ml-60">
-          {menuItems.map((item, index) => (
-            <div
-              key={index}
-              className={`relative group text-[20px] font-medium font-['Poppins'] cursor-pointer ${
-                activeItem === item.label ? 'text-[#caa767]' : 'text-[#caa767]'
-              }`}
-              onClick={() => setActiveItem(item.label)} // Set active item on click
-            >
-              <Link href={item.link}>{item.label}</Link>
-              {/* Up Line */}
-              <span
-                className={`absolute bottom-[100%] left-0 h-[2px] bg-[#caa767] transition-all duration-300 ease-in-out ${
-                  activeItem === item.label ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}
-              ></span>
-              {/* Down Line */}
-              <span
-                className={`absolute top-full left-0 h-[2px] bg-[#caa767] transition-all duration-300 ease-in-out ${
-                  activeItem === item.label ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}
-              ></span>
+    <nav className="w-full  shadow-md sticky top-0 z-50">
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Desktop Navbar */}
+        <div className="flex flex-row items-center justify-between  h-20 md:h-24 lg:h-28">
+          {/* Logo Section */}
+          <div className="flex items-center ">
+            <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 relative">
+              <Image
+                src={Fabceylon_logo}
+                alt="Fab Ceylon Logo"
+                fill
+                className="object-contain"
+              />
             </div>
-          ))}
+            <div className="text-[#eb650f] text-2xl md:text-3xl lg:text-4xl font-extrabold font-serif ml-2 md:ml-4">
+              FAB CEYLON Grand
+            </div>
+          </div>
 
-          <div className="h-[52px] justify-start items-center gap-[22px] inline-flex ml-20">
-            <Image
-              className="w-[40px] h-[40px]"
-              src={user_icon}
-              alt="User Icon"
-              width={52}
-              height={52}
-            />
+          {/* Desktop Menu Items */}
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
+            {menuItems.map((item, index) => (
+              <div
+                key={index}
+                className="relative group"
+                onClick={() => setActiveItem(item.label)}
+              >
+                <Link
+                  href={item.link}
+                  className={`text-lg xl:text-xl font-medium font-['Poppins'] ${
+                    activeItem === item.label ? 'text-[#caa767]' : 'text-[#caa767] hover:text-[#eb650f]'
+                  } transition-colors duration-300`}
+                >
+                  {item.label}
+                </Link>
+                {/* Animated underline */}
+                <span
+                  className={`absolute bottom-0 left-0 h-0.5 bg-[#caa767] transition-all duration-300 ${
+                    activeItem === item.label ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                ></span>
+              </div>
+            ))}
+          </div>
+
+          {/* User Icon - Desktop */}
+          <div className="hidden lg:flex items-center ml-6">
+            <div className="w-10 h-10 relative cursor-pointer">
+              <Image
+                src={user_icon}
+                alt="User Icon"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="lg:hidden text-[#caa767] focus:outline-none"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`${mobileMenuOpen ? 'block' : 'hidden'} lg:hidden pb-4`}>
+          <div className="flex flex-col space-y-4">
+            {menuItems.map((item, index) => (
+              <Link
+                href={item.link}
+                key={index}
+                className={`text-[#caa767] text-lg font-medium font-['Poppins'] py-2 px-2 ${
+                  activeItem === item.label ? 'bg-[#eb650f]/10' : 'hover:bg-[#eb650f]/10'
+                } rounded-md transition-colors`}
+                onClick={() => {
+                  setActiveItem(item.label);
+                  setMobileMenuOpen(false);
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="flex items-center pt-2">
+              <div className="w-8 h-8 relative mr-3">
+                <Image
+                  src={user_icon}
+                  alt="User Icon"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-[#caa767] font-medium">My Account</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
